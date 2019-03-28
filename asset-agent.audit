@@ -16,9 +16,12 @@
 # #2. 脚本： (全盘文件检索60秒timeout)
 #$ foo='for bar in `timeout 60s find /  -not -path "/proc/*" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; sort assetemp.log | uniq; rm -f assetemp.log*
 # #3. 输出样例：
-#openjdk version "1.8.0_xxx"
-#openjdk version "1.7.0_xxx"
-#openjdk version "1.6.0_xxx"
+#OpenJDK 64-Bit Server VM (build 25.201-b09, mixed mode)
+#OpenJDK Runtime Environment (build 1.8.0_201-b09)
+#openjdk version "1.8.0_201"
+#java version "11" 2018-09-25
+#Java(TM) SE Runtime Environment 18.9 (build 11+28)
+#Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 #########################################################################################
 
 <custom_item>
