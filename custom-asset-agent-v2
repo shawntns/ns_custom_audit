@@ -1,0 +1,162 @@
+<check_type:"Unix">
+
+#########################################################################################
+#通过which -a方式获取java安装路径并得到版本。由于which -a可能获得多行输出，
+#需要考虑如何将多行输出，作为参数以loop方式传递给“-version”命令处理。下面为目前的loop传参的参考做法:
+#$ foo='for bar in `which -a java`; do $bar -version; done' ; bash -c "$foo"
+#Output Example (实在找不到java的例子，暂以python代替): 
+#$ which -a python
+#/usr/local/bin/python
+#/usr/bin/python
+#/Library/Frameworks/Python.framework/Versions/2.7/bin//python
+#$ foo='for bar in `which -a python`; do $bar --version; done'; bash -c "$foo"
+#Python 2.7.14
+#Python 2.7.10
+#Python 2.7.14
+#或者使用xargs（但通过time对此测试发现，xargs执行效率比loop方式要低一些）
+#$ which -a python | xargs -I % sh -c '% --version'
+#$ time which -a python | xargs -I % sh -c '% --version' 2>/dev/null
+#real	0m0.051s
+#user	0m0.014s
+#sys	0m0.030s
+#$ time foo='for bar in `which -a python`; do $bar --version; done'; bash -c "$foo"
+#real	0m0.000s
+#user	0m0.000s
+#sys	0m0.000s
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Java Default"
+	cmd:	"foo=\'for bar in `which -a java 2>/dev/null`; do $bar -version; done\'; bash -c \"$foo\""
+	not_expect:	"[Jj]ava [Vv]ersion"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+#########################################################################################
+#针对自定义目录解压安装，并且尚未配置环境变量情况下的Java检测方法
+#需要注意，安实际情况修改Java安装路径
+#如果已正确配置了环境变量，则应当尽可能使用'which -a java'命令实现
+#即，当同一主机同时击中Java Default与Java Compiled，建议优先参考Java Default返回值
+#Output Example: 
+#java version "1.6.0_45"
+#Java(TM) SE Runtime Environment (build 1.6.0_45-b06)
+#Java HotSpot(TM) 64-Bit Server VM (build 20.45-b01, mixed mode)
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Java Compiled"
+	cmd:	"/app/*/*/bin/java -version 2>/dev/null"
+	not_expect:	"[Jjava] [Vv]ersion"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+#########################################################################################
+#针对Weglogic自定义安装的检测方法(全盘文件检索60秒timeout)
+# #1. 原始xml文件样例: 
+# #1.1. version 10.x raw
+#<component name="WebLogic Server" Version”10.3.4.0“ InstallDir="/app/wls11g/bea/wlserver_10.3">
+# #1.2. version 12.x raw
+#<distribution status="installed" name="WebLogic Server for FMW" version="12.1.3.0.0">
+# #2. 脚本：
+#list=`timeout 60s find / -not -path "/proc/*" -name "registry.xml" 2>/dev/null`;  if [ $? -eq 124 ]; then echo "WebLogic not found"; else touch assetemp.log; for i in $list; do cat $i | grep  "WebLogic Server" | awk -F "=" '{print $4}'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for ver in `sort assetemp.log | uniq`; do echo "WebLogic Version: $ver"; done; rm -f assetemp.log*; fi
+# #3. 本脚本预期输出为
+# WebLogic Version: 12.1.3.0.0
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery WebLogic"
+	cmd:	"list=`timeout 60s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  if [ $? -eq 124 ]; then echo \"WebLogic not found\"; else touch assetemp.log; for i in $list; do cat $i | grep  \"WebLogic Server\" | awk -F \"=\" \'{print $4}\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for ver in `sort assetemp.log | uniq`; do echo \"WebLogic Version: $ver\"; done; rm -f assetemp.log*; fi"
+	not_expect:	"WebLogic Version: \d+"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+
+#########################################################################################
+#同时对自定义及标准安装Tomcat进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#foo='for bar in `timeout 30s find / -not -path "/proc/*" -name "version.sh" 2>/dev/null | grep tomcat`; do sh $bar; done'; bash -c "$foo" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i "Apache Tomcat" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo "Tomcat Version: $ver"; done; rm -f assetemp.log*
+# #2. 本脚本预期输出为
+# Tomcat Version: 7.0.76
+# Tomcat Version: 8.5.39
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Tomcat"
+	cmd:	"foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i tomcat assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f assetemp.log*"
+	not_expect:	"Tomcat Version \d+"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+#########################################################################################
+#同时对自定义及标准安装Nginx进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
+# #2. 本脚本预期输出为
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Nginx"
+	cmd:	"foo=\'for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"nginx version\" assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f assetemp.log*"
+	not_expect:	"Nginx Version \d+"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+
+#########################################################################################
+#python
+#$ foo='for bar in `which -a python`; do $bar --version; done'; bash -c "$foo"
+#Python 2.7.14
+#Python 2.7.10
+#Python 2.7.14
+#########################################################################################
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Python"
+	cmd:	"foo=\'for bar in `which -a python 2>/dev/null`; do $bar --version; done\'; bash -c \"$foo\""
+	not_expect:	"Python"
+	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+</custom_item>
+
+#########################################################################################
+#针对Nginx编译安装的检测方法
+#Output Example: 
+#nginx version: nginx/1.10.2
+#########################################################################################
+
+#<custom_item>
+#	system:	"Linux"
+#	type:	CMD_EXEC
+#	description:	"Custom Asset Discovery Nginx"
+#	cmd:	"/app/usr/local/nginx/sbin/nginx -v 2>/dev/null"
+#	not_expect:	"[Vv]ersion"
+#	severity     : MEDIUM
+#	quiet:	YES
+#	dont_echo_cmd:	YES
+#</custom_item>
+
+
+</check_type>
