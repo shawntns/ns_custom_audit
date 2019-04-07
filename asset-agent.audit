@@ -43,7 +43,7 @@
 # #1.2. version 12.x raw
 #<distribution status="installed" name="WebLogic Server for FMW" version="12.1.3.0.0">
 # #2. 脚本:
-#$ list=`timeout 60s find / -not -path "/proc/*" -name "registry.xml" 2>/dev/null`;  if [ $? -eq 124 ]; then echo "WebLogic not found"; else for i in $list; do grep  "WebLogic Server" $i | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for i in $list; do grep -i 'component name="WebLogic Server" Version' $i | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo "WebLogic Version: $ver"; done; rm -f assetemp.log*; fi
+#$ list=`timeout 60s find / -not -path "/proc/*" -name "registry.xml" 2>/dev/null`;  for i in $list; do grep  "WebLogic Server" $i | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for i in $list; do grep -i 'component name="WebLogic Server" Version' $i | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo "WebLogic Version: $ver"; done; rm -f assetemp.log*
 # #3. 输出样例：
 #WebLogic Version: 10.3.4.0
 #WebLogic Version: 12.1.3.0.0
@@ -54,7 +54,7 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery WebLogic"
-	cmd				:	"list=`timeout 60s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  if [ $? -eq 124 ]; then echo \"WebLogic not found\"; else for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for i in $list; do grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq`; do echo \"WebLogic Version: $ver\"; done; rm -f assetemp.log*; fi"
+	cmd				:	"list=`timeout 60s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for i in $list; do grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo \"WebLogic Version: $ver\"; done; rm -f assetemp.log*"
 	not_expect		:	"WebLogic Version: \d+"
 	severity    	: 	MEDIUM
 #	quiet			:	YES
