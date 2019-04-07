@@ -29,10 +29,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Java"
 	cmd				:	"foo=\'for bar in `timeout 60s find /  -not -path \"/proc/*\" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; sort assetemp.log | uniq; rm -f assetemp.log*"
-	not_expect		:	"[Vv]ersion"
-	severity    	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity    	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 #########################################################################################
@@ -55,10 +55,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery WebLogic"
 	cmd				:	"list=`timeout 60s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for i in $list; do grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo \"WebLogic Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"WebLogic Version: \d+"
-	severity    	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity    	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 
@@ -76,10 +76,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Tomcat"
 	cmd				:	"foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i tomcat assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"Tomcat Version: \d+"
-	severity     	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity     	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 #########################################################################################
@@ -95,10 +95,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Nginx"
 	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"nginx version\" assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"Nginx Version: \d+"
-	severity     	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity     	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 
@@ -115,10 +115,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery PHP"
 	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"^PHP\" assetemp.log  | awk \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo \"PHP Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"PHP Version: \d+"
-	severity     	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity     	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 #########################################################################################
@@ -136,10 +136,10 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Apache"
 	cmd				:	"foo=\'for bar in `which -a httpd 2>/dev/null`; do $bar -v; done\'; bash -c \"$foo\""
-	not_expect		:	"Apache"
-	severity     	: 	MEDIUM
-#	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	expect		:	"[Vv]ersion"
+#	severity     	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 
