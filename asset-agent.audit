@@ -103,19 +103,42 @@
 
 
 #########################################################################################
-#python 一种比较简单的实现做法 - which -a
-#$ foo='for bar in `which -a python`; do $bar --version; done'; bash -c "$foo"
-#Python 2.7.14
-#Python 2.7.10
-#Python 2.7.14
+#同时对自定义及标准安装php进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#$ foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
+# #2. 输出样例：
+#Nginx Version: 1.15.10
 #########################################################################################
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
-	description		:	"Custom Asset Discovery Python"
-	cmd				:	"foo=\'for bar in `which -a python 2>/dev/null`; do $bar --version; done\'; bash -c \"$foo\""
-	not_expect		:	"Python"
+	description		:	"Custom Asset Discovery Nginx"
+	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"nginx version\" assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f assetemp.log*"
+	not_expect		:	"Nginx Version \d+"
+	severity     	: 	MEDIUM
+#	quiet			:	YES
+#	dont_echo_cmd	:	YES
+</custom_item>
+
+
+
+#########################################################################################
+#Apache HTTP server
+#一种比较简单的实现做法，先使用'which -a'找到所有httpd binary
+# #1. 脚本：
+#$ foo='for bar in `which -a httpd 2>/dev/null`; do $bar -v; done'; bash -c "$foo"
+# #2. 输出样例：
+#Server version: Apache/2.4.6 (CentOS)
+#Server built:   Nov  5 2018 01:47:09
+#########################################################################################
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery Apache"
+	cmd				:	"foo=\'for bar in `which -a httpd 2>/dev/null`; do $bar -v; done\'; bash -c \"$foo\""
+	not_expect		:	"Apache"
 	severity     	: 	MEDIUM
 #	quiet			:	YES
 #	dont_echo_cmd	:	YES
