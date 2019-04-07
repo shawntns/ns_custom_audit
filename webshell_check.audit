@@ -3,7 +3,7 @@
 #########################################################################################
 #php检查方法:
 #$ find / -path /proc -prune -o -name '*.php' -type f -print0 | xargs -0 -i{} sh -c 'egrep -H "getParameter(Pwd)|getParameter("z0")|getString("TABLE_NAME")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker" "{}"'
-#Output Example: 
+#Output Example:
 #/tmp/test.php:	   var_dump(SHELL_ONLINE);
 #########################################################################################
 <custom_item>
@@ -14,7 +14,7 @@
 find / -path /proc -prune -o -name \'*.php\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
 	expect     : ""
 	severity     : HIGH
-	quiet:	YES
+#	quiet:	YES
 	dont_echo_cmd:	YES
 </custom_item>
 
@@ -26,7 +26,7 @@ find / -path /proc -prune -o -name \'*.php\' -type f -print0 | xargs -0 -i{} sh 
 find / -path /proc -prune -o -name \'*.asp\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
 	expect     : ""
 	severity     : HIGH
-	quiet:	YES
+#	quiet:	YES
 	dont_echo_cmd:	YES
 </custom_item>
 
@@ -37,7 +37,7 @@ find / -path /proc -prune -o -name \'*.asp\' -type f -print0 | xargs -0 -i{} sh 
 	cmd     : "find / -path /proc -prune -o -name \'*.jsp\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
 	expect     : ""
 	severity     : HIGH
-	quiet:	YES
+#	quiet:	YES
 	dont_echo_cmd:	YES
 </custom_item>
 
@@ -49,7 +49,7 @@ find / -path /proc -prune -o -name \'*.asp\' -type f -print0 | xargs -0 -i{} sh 
 find / -path /proc -prune -o -name \'*.aspx\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
 	expect     : ""
 	severity     : HIGH
-	quiet:	YES
+#	quiet:	YES
 	dont_echo_cmd:	YES
 </custom_item>
 
@@ -61,7 +61,7 @@ find / -path /proc -prune -o -name \'*.aspx\' -type f -print0 | xargs -0 -i{} sh
 find / -path /proc -prune -o -name \'*.cfm\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
 	expect     : ""
 	severity     : HIGH
-	quiet:	YES
+#	quiet:	YES
 	dont_echo_cmd:	YES
 </custom_item>
 
