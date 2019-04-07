@@ -1,0 +1,68 @@
+<check_type:"Unix">
+
+#########################################################################################
+#php检查方法:
+#$ find / -path /proc -prune -o -name '*.php' -type f -print0 | xargs -0 -i{} sh -c 'egrep -H "getParameter(Pwd)|getParameter("z0")|getString("TABLE_NAME")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker" "{}"'
+#Output Example: 
+#/tmp/test.php:	   var_dump(SHELL_ONLINE);
+#########################################################################################
+<custom_item>
+	system     : "Linux"
+	type     : CMD_EXEC
+	description     : "Custom Webshell Check PHP"
+	cmd     : "
+find / -path /proc -prune -o -name \'*.php\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
+	expect     : ""
+	severity     : HIGH
+	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+<custom_item>
+	system     : "Linux"
+	type     : CMD_EXEC
+	description     : "Custom Webshell Check ASP"
+	cmd     : "
+find / -path /proc -prune -o -name \'*.asp\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
+	expect     : ""
+	severity     : HIGH
+	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+<custom_item>
+	system     : "Linux"
+	type     : CMD_EXEC
+	description     : "Custom Webshell Check JSP"
+	cmd     : "find / -path /proc -prune -o -name \'*.jsp\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
+	expect     : ""
+	severity     : HIGH
+	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+<custom_item>
+	system     : "Linux"
+	type     : CMD_EXEC
+	description     : "Custom Webshell Check ASPX"
+	cmd     : "
+find / -path /proc -prune -o -name \'*.aspx\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
+	expect     : ""
+	severity     : HIGH
+	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+<custom_item>
+	system     : "Linux"
+	type     : CMD_EXEC
+	description     : "Custom Webshell Check CFM"
+	cmd     : "
+find / -path /proc -prune -o -name \'*.cfm\' -type f -print0 | xargs -0 -i{} sh -c \'egrep -H \"getParameter(Pwd)|getParameter(\"z0\")|getString(\"TABLE_NAME\")|JspSpy|SHELL_ONLINE|VPortScanInvoker|BackConnectInvoker\" \"{}\"\'"
+	expect     : ""
+	severity     : HIGH
+	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+</check_type>
