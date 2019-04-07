@@ -76,7 +76,7 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Tomcat"
 	cmd				:	"foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i tomcat assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"Tomcat Version \d+"
+	not_expect		:	"Tomcat Version: \d+"
 	severity     	: 	MEDIUM
 #	quiet			:	YES
 #	dont_echo_cmd	:	YES
@@ -95,7 +95,7 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Nginx"
 	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"nginx version\" assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"Nginx Version \d+"
+	not_expect		:	"Nginx Version: \d+"
 	severity     	: 	MEDIUM
 #	quiet			:	YES
 #	dont_echo_cmd	:	YES
@@ -105,23 +105,21 @@
 #########################################################################################
 #同时对自定义及标准安装php进行检测(全盘文件检索30秒timeout)
 # #1. 脚本：
-#$ foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
+#$ foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
 # #2. 输出样例：
-#Nginx Version: 1.15.10
+#PHP Version: 7.0.33
 #########################################################################################
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
-	description		:	"Custom Asset Discovery Nginx"
-	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"nginx version\" assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f assetemp.log*"
-	not_expect		:	"Nginx Version \d+"
+	description		:	"Custom Asset Discovery PHP"
+	cmd				:	"foo=\'for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; grep -i \"^PHP\" assetemp.log  | awk \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 | uniq`; do echo \"PHP Version: $ver\"; done; rm -f assetemp.log*"
+	not_expect		:	"PHP Version: \d+"
 	severity     	: 	MEDIUM
 #	quiet			:	YES
 #	dont_echo_cmd	:	YES
 </custom_item>
-
-
 
 #########################################################################################
 #Apache HTTP server
