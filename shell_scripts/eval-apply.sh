@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: xxu@tenable.com
-# Usage: sh eval-approval.sh <1st-RequestID> <2st-RequestID> ... <last-RequestID>
-echo "I. Who will be responsible to approve this EVAL request?"
+#选择tenable SE名字，本次license申请将会发送至他的邮箱
+echo "I. Who will be responsible to approve this EVAL Lic?"
 names='Coco Jason Rocky Shawn'
 PS3="Select SE's name: "
 select name in $names; do
@@ -18,6 +18,7 @@ select name in $names; do
   break
 done
 
+#选择agent规模数量
 echo "II. How many Agents?"
 numbers='128 512 1024 2048'
 PS3="Select the number: "
@@ -26,6 +27,7 @@ select agents in $numbers; do
   break
 done
 
+#输入需申请的license个数（即重复申请n个）
 echo "III. How many copies of license?"
 read qty
 
