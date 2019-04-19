@@ -54,7 +54,7 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery WebLogic"
-	cmd				:	"list=`timeout 60s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for i in $list; do grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo \"WebLogic Version: $ver\"; done; rm -f assetemp.log*"
+	cmd				:	"list=`timeout 180s find / -not -path \"/proc/*\" -name \"registry.xml\" 2>/dev/null`;  for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for i in $list; do grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `sort assetemp.log 2>/dev/null | uniq `; do echo \"WebLogic Version: $ver\"; echo $i; done; rm -f assetemp.log*"
 	expect		:	"[Vv]ersion"
 #	severity    	: 	MEDIUM
 	quiet			:	YES
