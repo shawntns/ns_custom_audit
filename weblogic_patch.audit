@@ -28,7 +28,7 @@
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
-	description		:	"Custom Asset Discovery WebLogic_Patch_ospatch"
+	description		:	"Custom Asset Discovery WebLogic_Patch_opatch"
   info      : "WebLogic Patch For Versions 12c and above"
 	cmd				:	"if test -e $MW_HOME/OPatch/opatch; then sh $MW_HOME/OPatch/opatch lspatches; exit 0; else list=`timeout 60s find / -not -path \"/proc/*\" -type f -name \"opatch\"  2>/dev/null`; if [ $? -eq 124 ]; then echo \"wls_opatch not found (Timeout)\"; else for i in $list; do sh $i lspatches; echo Found patch utility at $i; done; fi; fi"
 	expect		:	"Found patch"
