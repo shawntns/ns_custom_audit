@@ -96,7 +96,7 @@ cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -name php 2>/
 一种比较简单的实现做法，先使用'which -a'找到所有httpd binary
 ### 脚本
 ```
-for bar in `which -a httpd 2>/dev/null`; do $bar -v; done'; bash -c "$foo"
+for bar in `which -a httpd 2>/dev/null`; do $bar -v; done
 ```
 ### 输出样例
 ```
