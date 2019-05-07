@@ -1,0 +1,117 @@
+
+# 1. 方法论：
+通过find获取java安装路径并执行java -version得到版本。由于find可能获得多行输出，需要考虑如何将多行输出，作为参数以loop方式传递给“-version”命令处理。
+或也可使用xargs（但通过time对此测试发现，xargs执行效率比loop方式要低一些）
+```
+[root@localhost tmp]# time foo='for bar in timeout 60s find /  -not -path \"/proc/*\" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done'; bash -c "$foo"
+real	0m0.000s
+user	0m0.000s
+sys	0m0.000s
+[root@localhost tmp]# time timeout 60s find /  -not -path \"/proc/*\" -executable -type f -name java 2>/dev/null | xargs -I % bash -c '% -version'
+real	0m1.469s
+user	0m0.518s
+sys	0m0.828s
+```
+
+# 2. 脚本  (全盘文件检索60秒timeout)
+```
+$ foo='for bar in `timeout 60s find /  -not -path "/proc/*" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; sort assetemp.log | uniq; rm -f assetemp.log*
+```
+# 3. 输出样例：
+```
+OpenJDK 64-Bit Server VM (build 25.201-b09, mixed mode)
+OpenJDK Runtime Environment (build 1.8.0_201-b09)
+openjdk version "1.8.0_201"
+java version "11" 2018-09-25
+#Java(TM) SE Runtime Environment 18.9 (build 11+28)
+Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
+```
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery Java"
+	cmd				:	"foo=\'for bar in `timeout 60s find /  -not -path \"/proc/*\" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done\'; bash -c \"$foo\" >>assetemp.log 2>/dev/null; sort assetemp.log | uniq; rm -f assetemp.log*"
+	expect		:	"[Vv]ersion"
+#	severity    	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
+#########################################################################################
+#针对Weglogic自定义安装的检测方法(全盘文件检索60秒timeout)
+# #1. 原始xml文件样例:
+# #1.1. version 10.x raw
+#<component name="WebLogic Server" Version"10.3.4.0" InstallDir="/app/wls11g/bea/wlserver_10.3">
+# #1.2. version 12.x raw
+#<distribution status="installed" name="WebLogic Server for FMW" version="12.1.3.0.0">
+# #2. 脚本:
+#$ list=`timeout 180s find / -not -path "/proc/*" -type f -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for i in $list; do grep  "WebLogic Server" $i | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; grep -i 'component name="WebLogic Server" Version' $i | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $list; fi; rm -f assetemp.log*
+# #3. 输出样例：
+#WebLogic Version: 10.3.4.0
+#WebLogic Version: 12.1.3.0.0
+#WebLogic Version: 12.1.3.0.fake
+#########################################################################################
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery WebLogic"
+	cmd				:	"list=`timeout 180s find / -not -path \"/proc/*\" -type f -name \"registry.xml\" 2>/dev/null`; if [ $? -eq 124 ]; then echo \"WebLogic not found (Timeout)\"; else touch assetemp.log;  for i in $list; do grep  \"WebLogic Server\" $i | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; grep -i \'component name=\"WebLogic Server\" Version\' $i | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo \"WebLogic Version: $ver\"; done; echo $list; fi; rm -f assetemp.log*"
+	expect		:	"[Vv]ersion"
+#	severity    	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
+
+#########################################################################################
+#同时对自定义及标准安装Tomcat进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#$ foo='for bar in `timeout 30s find / -not -path "/proc/*" -type f -name "version.sh" 2>/dev/null | grep tomcat`; do sh $bar; done'; bash -c "$foo" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i "Apache Tomcat" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Tomcat Version: $ver"; done; rm -f assetemp.log*
+# #2. 输出样例：
+#Tomcat Version: 7.0.76
+#Tomcat Version: 8.5.39
+#########################################################################################
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery Tomcat"
+	cmd				:	"foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -type f -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" >> assetemp.log 2>/dev/null; tomcat version >> assetemp.log 2>/dev/null; grep -i tomcat assetemp.log  | awk -F \"/\"  \'{print $2}\' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f assetemp.log*"
+	expect		:	"[Vv]ersion"
+#	severity     	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
+#########################################################################################
+#同时对自定义及标准安装Nginx进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#$ foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
+# #2. 输出样例：
+#Nginx Version: 1.15.10
+#########################################################################################
+
+
+
+
+#########################################################################################
+#同时对自定义及标准安装php进行检测(全盘文件检索30秒timeout)
+# #1. 脚本：
+#$ foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
+# #2. 输出样例：
+#PHP Version: 7.0.33
+#########################################################################################
+
+
+
+#########################################################################################
+#Apache HTTP server
+#一种比较简单的实现做法，先使用'which -a'找到所有httpd binary
+# #1. 脚本：
+#$ foo='for bar in `which -a httpd 2>/dev/null`; do $bar -v; done'; bash -c "$foo"
+# #2. 输出样例：
+#Server version: Apache/2.4.6 (CentOS)
+#Server built:   Nov  5 2018 01:47:09
+#########################################################################################
