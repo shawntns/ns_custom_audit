@@ -33,9 +33,14 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 针对Weglogic自定义安装的检测方法(全盘文件检索60秒timeout)
 ### 原始xml文件样例
 #### version 10.x raw
+```
 <component name="WebLogic Server" Version"10.3.4.0" InstallDir="/app/wls11g/bea/wlserver_10.3">
+```
 #### version 12.x raw
+```
 <distribution status="installed" name="WebLogic Server for FMW" version="12.1.3.0.0">
+```
+
 ### 脚本
 ```
 list=`timeout 180s find / -not -path "/proc/*" -type f -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for i in $list; do grep  "WebLogic Server" $i | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; grep -i 'component name="WebLogic Server" Version' $i | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $list; fi; rm -f assetemp.log*
@@ -72,7 +77,7 @@ foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`
 同时对自定义及标准安装php进行检测(全盘文件检索30秒timeout)
 ### 脚本
 ```
-$ foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
+foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >>assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >>assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
 ```
 ### 输出样例：
 `PHP Version: 7.0.33`
@@ -81,7 +86,7 @@ $ foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`
 一种比较简单的实现做法，先使用'which -a'找到所有httpd binary
 ### 脚本：
 ```
-$ foo='for bar in `which -a httpd 2>/dev/null`; do $bar -v; done'; bash -c "$foo"
+foo='for bar in `which -a httpd 2>/dev/null`; do $bar -v; done'; bash -c "$foo"
 ```
 ### 输出样例：
 ```
