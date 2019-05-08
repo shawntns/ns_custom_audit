@@ -24,9 +24,9 @@ sys	0m0.264s
 ```
 
 ### 脚本  
-全盘文件检索60秒timeout
+全盘文件检索30秒timeout
 ```
-for bar in `timeout 60s find /  -not -path "/proc/*" -not -path "*/docker/*" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done
+for bar in `timeout 30s find /  -not -path "/proc/*" -not -path "*/docker/*" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done
 ```
 
 
@@ -41,7 +41,7 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 ```
 
 ## Custom Asset Discovery WebLogic
-针对Weglogic自定义安装的检测方法(全盘文件检索60秒timeout)
+针对Weglogic自定义安装的检测方法(全盘文件检索60秒timeout),最后列出所有registry.xml路径
 ### 原始xml文件样例
 #### version 10.x raw
 ```
@@ -54,14 +54,16 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 
 ### 脚本
 ```
-cd /tmp && foo=`timeout 180s find / -not -path "/proc/*" -type f -size -10M  -maxdepth 8 -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for bar in $foo; do grep  "WebLogic Server" $bar | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for bar in $foo; do grep -i 'component name="WebLogic Server" Version' $bar | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $foo; fi; rm -f assetemp.log*
+cd /tmp && foo=`timeout 60s find / -not -path "/proc/*" -type f -size -10M  -maxdepth 8 -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for bar in $foo; do grep  "WebLogic Server" $bar | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for bar in $foo; do grep -i 'component name="WebLogic Server" Version' $bar | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $foo; fi; rm -f assetemp.log*
 ```
 
 ### 输出样例
 ```
-WebLogic Version: 10.3.4.0
+WebLogic Version: 12.1.3.0.0_fake
 WebLogic Version: 12.1.3.0.0
-WebLogic Version: 12.1.3.0.fake
+WebLogic Version: 12.2.1.0_fake
+WebLogic Version: 10.3.4.0
+/root/registry.xml /tmp/registry.xml /tmp/wlstest/registry.xml
 ```
 
 ## Custom Asset Discovery Tomcat

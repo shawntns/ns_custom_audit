@@ -4,7 +4,7 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Java"
-	cmd				:	"for bar in `timeout 60s find /  -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
+	cmd				:	"for bar in `timeout 30s find /  -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
 	expect		:	"[Vv]ersion"
 #	severity    	: 	MEDIUM
 	quiet			:	YES
@@ -15,7 +15,7 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery WebLogic"
-	cmd				:	"cd /tmp && foo=`timeout 180s find / -not -path \"/proc/*\" -type f -size -10M  -maxdepth 8 -name \"registry.xml\" 2>/dev/null`; if [ $? -eq 124 ]; then echo \"WebLogic not found (Timeout)\"; else touch assetemp.log;  for bar in $foo; do grep  \"WebLogic Server\" $bar | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for bar in $foo; do grep -i \'component name=\"WebLogic Server\" Version\' $bar | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo \"WebLogic Version: $ver\"; done; echo $foo; fi; rm -f assetemp.log*"
+	cmd				:	"cd /tmp && foo=`timeout 60s find / -not -path \"/proc/*\" -type f -size -10M  -maxdepth 8 -name \"registry.xml\" 2>/dev/null`; if [ $? -eq 124 ]; then echo \"WebLogic not found (Timeout)\"; else touch assetemp.log;  for bar in $foo; do grep  \"WebLogic Server\" $bar | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>assetemp.log; done; for bar in $foo; do grep -i \'component name=\"WebLogic Server\" Version\' $bar | awk -F \'\"\' \'{ print $4 }\' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo \"WebLogic Version: $ver\"; done; echo $foo; fi; rm -f assetemp.log*"
 	expect		:	"[Vv]ersion"
 #	severity    	: 	MEDIUM
 	quiet			:	YES
