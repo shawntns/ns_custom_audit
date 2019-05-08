@@ -1,0 +1,14 @@
+<check_type:"Unix">
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Restart Agent"
+	cmd				:	"touch /tmp/agentrestart.sh && echo service nessusagent restart > /tmp/agentrestart.sh && bash -c \"sh /tmp/agentrestart.sh\""
+	expect		:	""
+#	severity    	: 	MEDIUM
+#	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
+</check_type>
