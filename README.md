@@ -54,6 +54,7 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 ```
 cd /tmp && foo=`timeout 180s find / -not -path "/proc/*" -type f -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for bar in $foo; do grep  "WebLogic Server" $bar | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for bar in $foo; do grep -i 'component name="WebLogic Server" Version' $bar | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $foo; fi; rm -f assetemp.log*
 ```
+
 ### 输出样例
 ```
 WebLogic Version: 10.3.4.0
