@@ -26,8 +26,10 @@ sys	0m0.264s
 ### 脚本  
 全盘文件检索60秒timeout
 ```
-for bar in `timeout 60s find /  -not -path "/proc/*" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done
+for bar in `timeout 60s find /  -not -path "/proc/*" -not -path "*/docker/*" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done
 ```
+
+
 ### 输出样例
 ```
 OpenJDK 64-Bit Server VM (build 25.201-b09, mixed mode)
@@ -52,7 +54,7 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 
 ### 脚本
 ```
-cd /tmp && foo=`timeout 180s find / -not -path "/proc/*" -type f -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for bar in $foo; do grep  "WebLogic Server" $bar | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for bar in $foo; do grep -i 'component name="WebLogic Server" Version' $bar | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $foo; fi; rm -f assetemp.log*
+cd /tmp && foo=`timeout 180s find / -not -path "/proc/*" -type f -size -10M  -maxdepth 8 -name "registry.xml" 2>/dev/null`; if [ $? -eq 124 ]; then echo "WebLogic not found (Timeout)"; else touch assetemp.log;  for bar in $foo; do grep  "WebLogic Server" $bar | awk -F '=' '{ print $4 }'| cut -c 2- | sed 's/..$//' >>assetemp.log; done; for bar in $foo; do grep -i 'component name="WebLogic Server" Version' $bar | awk -F '"' '{ print $4 }' >>assetemp.log; done; for ver in `uniq assetemp.log 2>/dev/null`; do echo "WebLogic Version: $ver"; done; echo $foo; fi; rm -f assetemp.log*
 ```
 
 ### 输出样例
@@ -66,7 +68,7 @@ WebLogic Version: 12.1.3.0.fake
 同时对自定义及标准安装Tomcat进行检测(全盘文件检索30秒timeout)
 ### 脚本
 ```
-cd /tmp && foo='for bar in `timeout 30s find / -not -path "/proc/*" -type f -name "version.sh" 2>/dev/null | grep tomcat`; do sh $bar; done'; bash -c "$foo" > assetemp.log 2>/dev/null; grep -i "Apache Tomcat" assetemp.log  | awk -F "/"  '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Tomcat Version: $ver"; done; rm -f assetemp.log*
+cd /tmp && foo='for bar in `timeout 30s find / -not -path "/proc/*" -type f -size -10M  -maxdepth 8 -name "version.sh" 2>/dev/null | grep tomcat`; do sh $bar; done'; bash -c "$foo" > assetemp.log 2>/dev/null; grep -i "Apache Tomcat" assetemp.log  | awk -F "/"  '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Tomcat Version: $ver"; done; rm -f assetemp.log*
 ```
 
 ### 输出样例
@@ -79,7 +81,7 @@ Tomcat Version: 8.5.39
 同时对自定义及标准安装Nginx进行检测(全盘文件检索30秒timeout)
 ### 脚本
 ```
-cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
+cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -size -10M  -maxdepth 8 -name nginx 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >assetemp.log 2>/dev/null; grep -i "nginx version" assetemp.log  | awk -F "/"  '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Nginx Version: $ver"; done; rm -f assetemp.log*
 ```
 ### 输出样例
 `Nginx Version: 1.15.10`
@@ -88,7 +90,7 @@ cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -name nginx 2
 同时对自定义及标准安装php进行检测(全盘文件检索30秒timeout)
 ### 脚本
 ```
-cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
+cd /tmp && foo='for bar in `timeout 30s find / -executable -type f -size -10M  -maxdepth 8 -name php 2>/dev/null`; do $bar -v 2>&1; done'; bash -c "$foo" >assetemp.log 2>/dev/null; grep -i "^PHP" assetemp.log  | awk '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "PHP Version: $ver"; done; rm -f assetemp.log*
 ```
 ### 输出样例
 `PHP Version: 7.0.33`
