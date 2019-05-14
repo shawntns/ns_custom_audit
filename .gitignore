@@ -1,1 +1,2 @@
-shell_scripts
+.gitignore
+/shell_scripts/
