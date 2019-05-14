@@ -1,5 +1,5 @@
 <check_type:"Unix">
-
+#请勿使用! 仅作备忘——restart或stop nessusagent无效
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
