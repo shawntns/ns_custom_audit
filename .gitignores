@@ -1,4 +1,4 @@
-.gitignore
+.gitignores
 .DS_Store
 /shell_scripts/
 /backup_only_do_NOT_use/
