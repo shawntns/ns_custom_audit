@@ -1,0 +1,16 @@
+<check_type:"Windows" version:"2">
+
+<custom_item>
+type: AUDIT_POWERSHELL
+description: "Windows Asset Discovery Current_Users"
+info: "query user"
+value_type: POLICY_TEXT
+value_data: ""
+powershell_args : 'IABDAE0ARAAgAC8AQwAgACIAcQB1AGUAcgB5ACAAdQBzAGUAcgAiACAA'
+ps_encoded_args : YES
+severity: MEDIUM
+only_show_cmd_output: YES
+powershell_option: CAN_BE_NULL
+</custom_item>
+
+</check_type>

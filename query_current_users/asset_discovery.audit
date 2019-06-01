@@ -1,0 +1,15 @@
+<check_type:"Unix">
+
+<custom_item>
+	system:	"Linux"
+	type:	CMD_EXEC
+	description:	"Custom Asset Discovery Current_Users"
+	cmd:	"who"
+	expect:	""
+	severity:	MEDIUM
+#	quiet:	YES
+	dont_echo_cmd:	YES
+</custom_item>
+
+
+</check_type>
