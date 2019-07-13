@@ -66,4 +66,15 @@
 	dont_echo_cmd	:	YES
 </custom_item>
 
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery Fastjson"
+	cmd				:	"source /etc/profile 2>/dev/null; source /root/.bash_profile 2>/dev/null; if [ ! -f \"/home/appadmin/.bash_profile\" ];then echo \"appadmin bash_profile not exit,pass\"; else source /home/appadmin/.bash_profile; fi; touch /tmp/temp.log; listjava=`ps -ef | grep java | grep -v grep | awk \'{print $2}\'`; for i in $listjava; do listjarfile=`lsof -p $i | grep \"\.jar$\" | awk \'{print $NF}\'`; for j in $listjarfile; do RESULT=`jar tvf $j | grep \"fastjson\" | awk -F \"/\" \'{print $NF}\'`; if  [ -n \"$RESULT\" ] ;then echo $j >> /tmp/temp.log; fi; done; done; printf \"fastjson result:\n`grep fastjson /tmp/temp.log | sort | uniq -c`\n\"; rm -f /tmp/temp.log"
+	expect		:	"fastjson"
+#	severity    	: 	MEDIUM
+	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
 </check_type>
