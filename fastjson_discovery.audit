@@ -6,11 +6,11 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Fastjson"
-	cmd				:	"source /etc/profile 2>/dev/null; source /root/.bash_profile 2>/dev/null; if [ ! -f \"/home/appadmin/.bash_profile\" ];then echo \"appadmin bash_profile not exit,pass\"; else source /home/appadmin/.bash_profile; fi; touch /tmp/temp.log; listjava=`ps -ef | grep java | grep -v grep | awk \'{print $2}\'`; for i in $listjava; do listjarfile=`lsof -p $i | grep \"\.jar$\" | awk \'{print $NF}\'`; for j in $listjarfile; do RESULT=`jar tvf $j 2>/dev/null | grep \"fastjson\" | grep \"\.jar$\" | awk -F \"/\" \'{print $NF}\'`; if  [ -n \"$RESULT\" ] ;then echo \"$j-->$RESULT\" >> /tmp/temp.log; fi; done; done; printf \"fastjson result:\n`grep fastjson /tmp/temp.log | sort | uniq -c`\n\"; rm -f /tmp/temp.log"
-	expect		:	"fastjson"
+	cmd				:	"source /etc/profile 2>/dev/null; source /root/.bash_profile 2>/dev/null; if [ ! -f \"/home/appadmin/.bash_profile\" ];then echo \"appadmin bash_profile not exit,pass\"; else source /home/appadmin/.bash_profile; fi; touch /tmp/temp.log; listjava=`ps -ef | grep java | grep -v grep | awk \'{print $2}\'`; for i in $listjava; do listjarfile=`lsof -p $i | grep \"\.jar$\" | awk \'{print $NF}\'`; for j in $listjarfile; do RESULT=`jar tvf $j 2>/dev/null | grep \"fastjson\" | grep \"\.jar$\" | awk -F \"/\" \'{print $NF}\'`; if  [ -n \"$RESULT\" ] ;then echo \"$j-->$RESULT\" >> /tmp/temp.log; fi; done; done; if [ -n \"`grep fastjson /tmp/temp.log`\" ] ;then printf \"fastjson result:\n`grep fastjson /tmp/temp.log | sort | uniq -c`\n\"; fi; rm -f /tmp/temp.log"
+	expect		:	"fastjson result"
 #	severity    	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 
