@@ -1,5 +1,5 @@
-#Sample: 
-#fastjson result:      3 /app/titans-webserver/lib/titans-webserver-5.0.0.jar-->fastjson-1.2.54.jar
+#Output Sample: 
+#fastjson result:      3 /app/projectX-webserver/lib/projectX-webserver-5.0.0.jar-->fastjson-1.2.54.jar
 <check_type:"Unix">
 
 <custom_item>
