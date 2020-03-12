@@ -4,55 +4,55 @@
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Java"
-	cmd				:	"for bar in `timeout 30s find /  -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
+	cmd				:	"for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -1M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
 	expect		:	"[Vv]ersion"
 #	severity    	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery WebLogic"
-	cmd				:	"cd /tmp && foo=`timeout 60s find / -not -path \"/proc/*\" -type f -size -10M  -maxdepth 8 -name \"registry.xml\" 2>/dev/null`; if [ $? -eq 124 ]; then echo \"WebLogic not found (Timeout)\"; else touch NessusCAD;  for bar in $foo; do grep  \"WebLogic Server\" $bar | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>NessusCAD; done; for bar in $foo; do grep -i \'component name=\"WebLogic Server\" Version\' $bar | awk -F \'\"\' \'{ print $4 }\' >>NessusCAD; done; for ver in `uniq NessusCAD 2>/dev/null`; do echo \"WebLogic Version: $ver\"; done; echo $foo; fi; rm -f NessusCAD*"
+	cmd				:	"cd /tmp && foo=`timeout 60s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -type f -size -10M  -maxdepth 8 -name \"registry.xml\" 2>/dev/null`; if [ $? -eq 124 ]; then echo \"WebLogic not found (Timeout)\"; else touch NessusCAD;  for bar in $foo; do grep  \"WebLogic Server\" $bar | awk -F \'=\' \'{ print $4 }\'| cut -c 2- | sed \'s/..$//\' >>NessusCAD; done; for bar in $foo; do grep -i \'component name=\"WebLogic Server\" Version\' $bar | awk -F \'\"\' \'{ print $4 }\' >>NessusCAD; done; for ver in `uniq NessusCAD 2>/dev/null`; do echo \"WebLogic Version: $ver\"; done; echo $foo; fi; rm -f NessusCAD*"
 	expect		:	"[Vv]ersion"
 #	severity    	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Tomcat"
-	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -type f -size -10M  -maxdepth 8 -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" > NessusCAD 2>/dev/null; grep -i \"Apache Tomcat\" NessusCAD  | awk -F \"/\"  \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f NessusCAD*"
+	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -type f -size -1M  -maxdepth 8 -name \"version.sh\" 2>/dev/null | grep tomcat`; do sh $bar; done\'; bash -c \"$foo\" > NessusCAD 2>/dev/null; grep -i \"Apache Tomcat\" NessusCAD  | awk -F \"/\"  \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"Tomcat Version: $ver\"; done; rm -f NessusCAD*"
 	expect		:	"[Vv]ersion"
 #	severity     	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Nginx"
-	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -executable -type f -size -10M  -maxdepth 8 -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >NessusCAD 2>/dev/null; grep -i \"nginx version\" NessusCAD  | awk -F \"/\"  \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f NessusCAD*"
+	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -executable -type f -size -1M  -maxdepth 8 -name nginx 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >NessusCAD 2>/dev/null; grep -i \"nginx version\" NessusCAD  | awk -F \"/\"  \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"Nginx Version: $ver\"; done; rm -f NessusCAD*"
 	expect		:	"[Vv]ersion"
 #	severity     	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 <custom_item>
 	system			:	"Linux"
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery PHP"
-	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -executable -type f -size -10M  -maxdepth 8 -name php 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >NessusCAD 2>/dev/null; grep -i \"^PHP\" NessusCAD  | awk \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"PHP Version: $ver\"; done; rm -f NessusCAD*"
+	cmd				:	"cd /tmp && foo=\'for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f -size -10M  -maxdepth 8 -name php 2>/dev/null`; do $bar -v 2>&1; done\'; bash -c \"$foo\" >NessusCAD 2>/dev/null; grep -i \"^PHP\" NessusCAD  | awk \'{print $2}\' >NessusCAD1; for ver in `sort NessusCAD1 2>/dev/null | uniq`; do echo \"PHP Version: $ver\"; done; rm -f NessusCAD*"
 	expect		:	"[Vv]ersion"
 #	severity     	: 	MEDIUM
 #	quiet			:	YES
-#	dont_echo_cmd	:	YES
+	dont_echo_cmd	:	YES
 </custom_item>
 
 <custom_item>
@@ -72,6 +72,17 @@
 	description		:	"Custom Asset Discovery Fastjson"
 	cmd				:	"source /etc/profile 2>/dev/null; source /root/.bash_profile 2>/dev/null; if [ ! -f \"/home/appadmin/.bash_profile\" ];then echo \"appadmin bash_profile not exit,pass\"; else source /home/appadmin/.bash_profile; fi; touch /tmp/temp.log; listjava=`ps -ef | grep java | grep -v grep | awk \'{print $2}\'`; for i in $listjava; do listjarfile=`lsof -p $i | grep \"\.jar$\" | awk \'{print $NF}\'`; for j in $listjarfile; do RESULT=`jar tvf $j 2>/dev/null | grep \"fastjson\" | grep \"\.jar$\" | awk -F \"/\" \'{print $NF}\'`; if  [ -n \"$RESULT\" ] ;then echo \"$j-->$RESULT\" >> /tmp/temp.log; fi; done; done; if [ -n \"`grep fastjson /tmp/temp.log`\" ] ;then printf \"fastjson result:\n`grep fastjson /tmp/temp.log | sort | uniq -c`\n\"; fi; rm -f /tmp/temp.log"
 	expect		:	"fastjson result"
+#	severity    	: 	MEDIUM
+#	quiet			:	YES
+	dont_echo_cmd	:	YES
+</custom_item>
+
+<custom_item>
+	system			:	"Linux"
+	type			:	CMD_EXEC
+	description		:	"Custom Asset Discovery Redis"
+	cmd				:	"for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -10M  -maxdepth 8 -name redis-server 2>/dev/null`; do $bar --version 2>&1; done"
+	expect		:	"[Rr]edis server v="
 #	severity    	: 	MEDIUM
 #	quiet			:	YES
 	dont_echo_cmd	:	YES
