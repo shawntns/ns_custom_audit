@@ -82,7 +82,7 @@
 	type			:	CMD_EXEC
 	description		:	"Custom Asset Discovery Redis"
 	cmd				:	"for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -10M  -maxdepth 8 -name redis-server 2>/dev/null`; do $bar --version 2>&1; done"
-	expect		:	"[Rr]edis server v="
+	expect		:	"[Rr]edis server"
 #	severity    	: 	MEDIUM
 #	quiet			:	YES
 	dont_echo_cmd	:	YES
