@@ -1,15 +1,15 @@
 <check_type:"Unix">
 
-<custom_item>
-	system			:	"Linux"
-	type			:	CMD_EXEC
-	description		:	"Custom Asset Discovery Java"
-	cmd				:	"for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -1M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
-	expect		:	"[Vv]ersion"
-#	severity    	: 	MEDIUM
-#	quiet			:	YES
-	dont_echo_cmd	:	YES
-</custom_item>
+#<custom_item>
+#	system			:	"Linux"
+#	type			:	CMD_EXEC
+#	description		:	"Custom Asset Discovery Java"
+#	cmd				:	"for bar in `timeout 30s find / -not -path \"/proc/*\" -not -path \"*/docker/*\" -executable -type f  -size -1M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done"
+#	expect		:	"[Vv]ersion"
+##	severity    	: 	MEDIUM
+##	quiet			:	YES
+#	dont_echo_cmd	:	YES
+#</custom_item>
 
 <custom_item>
 	system			:	"Linux"
