@@ -1,4 +1,6 @@
 
+[asset_discovery.audit](主文件)
+
 ## Custom Asset Discovery Java
 ### 方法论
 通过find获取java安装路径并执行java -version得到版本。由于find可能获得多行输出，需要考虑如何将多行输出，作为参数以loop方式传递给“-version”命令处理。
@@ -67,8 +69,11 @@ WebLogic Version: 10.3.4.0
 ```
 
 ## Custom Asset Discovery Tomcat
+
 同时对自定义及标准安装Tomcat进行检测(全盘文件检索30秒timeout)
+
 ### 脚本
+
 ```
 cd /tmp && foo='for bar in `timeout 30s find / -not -path "/proc/*" -type f -size -10M  -maxdepth 8 -name "version.sh" 2>/dev/null | grep tomcat`; do sh $bar; done'; bash -c "$foo" > assetemp.log 2>/dev/null; grep -i "Apache Tomcat" assetemp.log  | awk -F "/"  '{print $2}' >assetemp.log1; for ver in `sort assetemp.log1 2>/dev/null | uniq`; do echo "Tomcat Version: $ver"; done; rm -f assetemp.log*
 ```
