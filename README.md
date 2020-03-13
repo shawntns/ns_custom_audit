@@ -11,6 +11,7 @@
 
 通过find获取java安装路径并执行java -version得到版本。由于find可能获得多行输出，需要考虑如何将多行输出，作为参数以loop方式传递给“-version”命令处理。
 或也可使用xargs
+
 ```bash
 [root@localhost tmp]# time for bar in `timeout 60s find /  -not -path "/proc/*" -executable -type f -name java 2>/dev/null`; do $bar -version 2>&1; done
 openjdk version "1.8.0_201"
@@ -34,10 +35,10 @@ sys	0m0.264s
 ### 脚本  
 
 全盘文件检索30秒timeout
+
 ```bash
 for bar in `timeout 30s find /  -not -path "/proc/*" -not -path "*/docker/*" -executable -type f  -size -10M  -maxdepth 8 -name java 2>/dev/null`; do $bar -version 2>&1; done
 ```
-
 
 ### 输出样例
 
