@@ -3,7 +3,7 @@
 
 通过Nessus Custom Audit(自定义基线脚本)实现各类检查， 例如找出各种逻辑复杂的的编译型中间件、Webshell代码等。
 
-* [asset_discovery.audit](资产探测脚本)
+* [资产探测脚本](asset_discovery.audit)
 
 ## Custom Asset Discovery Java
 
