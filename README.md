@@ -1,7 +1,7 @@
-***This tool is not an officially supported Tenable project***
+**This tool is not an officially supported Tenable project
 
-***Use of this tool is subject to the terms and conditions identified below,
-and is not subject to any license agreement you may have with Tenable***
+**Use of this tool is subject to the terms and conditions identified below,
+and is not subject to any license agreement you may have with Tenable
 
 # Nessus Custom Audit Use Cases
 
